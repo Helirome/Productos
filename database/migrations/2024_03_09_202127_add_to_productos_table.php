@@ -14,9 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::table('productos', function (Blueprint $table) {
-            $this->addSql('ALTER TABLE productos MODIFY codigo VARCHAR(20) NOT NULL');
-            $this->addSql('ALTER TABLE productos ADD UNIQUE (codigo)');
-            $this->addSql('ALTER TABLE productos MODIFY descripcion VARCHAR(255) NULL');
+            $table->string('codigo', 20)->unique()->change();
+            $table->text('descripcion')->nullable()->change();
+            //$this->addSql('ALTER TABLE productos MODIFY codigo VARCHAR(20) NOT NULL');
+            //$this->addSql('ALTER TABLE productos ADD UNIQUE (codigo)');
+            //$this->addSql('ALTER TABLE productos MODIFY descripcion VARCHAR(255) NULL');
 
             $table->after('existencia', function($table){
                 $table->foreignId('categoria_id')
@@ -39,9 +41,10 @@ return new class extends Migration
         Schema::table('productos', function (Blueprint $table) {
             $table->dropForeign('productos_categoria_id_foreign');
             $table->dropColumn('categoria_id');
-            $this->addSql('ALTER TABLE productos DROP INDEX codigo_unique');
-            $this->addSql('ALTER TABLE productos MODIFY codigo VARCHAR(250)');
-            $this->addSql('ALTER TABLE productos MODIFY descripcion TINYTEXT');
+            $table->dropUnique('productos_codigo_unique');
+            //$this->addSql('ALTER TABLE productos DROP INDEX codigo_unique');
+            //$this->addSql('ALTER TABLE productos MODIFY codigo VARCHAR(250)');
+            //$this->addSql('ALTER TABLE productos MODIFY descripcion TINYTEXT');
         });
     }
 };
